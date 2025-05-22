@@ -1,0 +1,79 @@
+#root, html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #94b5ea;
+    gap: 20px;
+}
+
+.container .card {
+    background-color: #e7e7e7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgb(211, 211, 211);
+    padding: 20px;
+    height: 600px;
+    width: 500px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.message-div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.message-box {
+    background-color: #4874c5;
+    border-radius: 8px;
+    color: white;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgb(211, 211, 211);
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #888;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+
+.input-box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+
+.text-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgb(211, 211, 211);
+}
+
+
+
