@@ -7,13 +7,13 @@ const Chat: FC = () => {
 
     useEffect(() => {
         socket.on("message", (message) => {
-            setMessages([...messages, message]);
+            setMessages((prev) => [...prev, message]);
         });
 
         return () => {
             socket.off("message");
         };
-    }, [messages]);
+    }, []);
 
     const sendMessage = () => {
         if (messageInput.trim() !== "") {
