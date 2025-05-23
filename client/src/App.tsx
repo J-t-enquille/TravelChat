@@ -1,11 +1,24 @@
-import "./App.css";
+import "./style.css";
 import { useState, useEffect } from "react";
 import { socket } from "./socket.ts";
+import Login from "./components/Login.tsx";
+type Message = {
+    text: string;
+    timestamp: Date;
+    senderId: string;
+    senderName: string;
+    senderColor: string;
+};
 
 function App() {
-    const [messages, setMessages] = useState<Array<{ text: string; timestamp: Date }>>([]);
+    const [messages, setMessages] = useState<Array<Message>>([]);
     const [messageInput, setMessageInput] = useState("");
     const [socketConnected, setSocketConnected] = useState(socket.connected);
+
+    const [user, setUser] = useState<{ name: string; color: string }>({
+        name: "",
+        color: "#4874c5",
+    });
 
     useEffect(() => {
         function onConnect() {
@@ -37,31 +50,66 @@ function App() {
     }, [messages]);
 
     const sendMessage = () => {
+        if (!socket.id) {
+            console.error("Socket ID is not available");
+            return;
+        }
         if (messageInput.trim() !== "") {
-            const message = { text: messageInput, timestamp: new Date() };
+            const message: Message = {
+                text: messageInput,
+                timestamp: new Date(),
+                senderId: socket.id,
+                senderName: user.name,
+                senderColor: user.color,
+            };
             socket.emit("message", message);
             setMessageInput("");
         }
     };
 
+    function getContrastingColor(hex: string): string {
+        hex = hex.replace("#", "");
+
+        // Convertit en valeurs RGB
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+
+        // Calcule la luminance
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+        // Retourne noir ou blanc selon la luminance
+        return luminance > 0.5 ? "#000000" : "#ffffff";
+    }
+
     if (!socketConnected) {
-        return (
-            <div className="container">
-                <button onClick={() => socket.connect()}>Connect</button>
-            </div>
-        );
+        return <Login user={user} setUser={setUser} />;
     }
 
     return (
         <div className="container">
             <div className="card">
                 <div className="messages-list">
-                    {messages.map((msg, index) => (
-                        <div key={index} className="message-div">
-                            <div className="message-box">{msg.text}</div>
-                            <span className="message-timestamp">{new Date(msg.timestamp).toLocaleTimeString()}</span>
-                        </div>
-                    ))}
+                    {messages.map((msg, index) => {
+                        const isOwnMessage = msg.senderId === socket.id;
+                        return (
+                            <div key={index} className="message-div">
+                                <span className="message-user-name">{msg.senderName}</span>
+                                <div
+                                    className="message-box"
+                                    style={{
+                                        backgroundColor: isOwnMessage ? user.color : msg.senderColor,
+                                        color: getContrastingColor(isOwnMessage ? user.color : msg.senderColor),
+                                    }}
+                                >
+                                    {msg.text}
+                                </div>
+                                <span className="message-timestamp">
+                                    {new Date(msg.timestamp).toLocaleTimeString()}
+                                </span>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="input-container">
                     <div className="input-box">
