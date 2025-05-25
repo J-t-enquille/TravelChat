@@ -1,14 +1,8 @@
 import { type FC, useContext, useEffect, useState } from "react";
 import { socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
-
-type Message = {
-    text: string;
-    timestamp: Date;
-    senderId: string;
-    senderName: string;
-    senderColor: string;
-};
+import { v4 as uuidv4 } from "uuid";
+import { type Message, validateMessage } from "../../services/Validation.ts";
 
 const Chat: FC = () => {
     const [messages, setMessages] = useState<Array<Message>>([]);
@@ -31,13 +25,22 @@ const Chat: FC = () => {
             return;
         }
         if (messageInput.trim() !== "") {
-            const message: Message = {
+            const message = {
+                messageId: uuidv4(),
                 text: messageInput,
-                timestamp: new Date(),
+                timestamp: new Date().toISOString(),
                 senderId: socket.id,
                 senderName: user.name,
                 senderColor: user.color,
             };
+            const valid = validateMessage(message);
+            if (!valid && validateMessage.errors) {
+                console.error("Validation errors", validateMessage.errors);
+                const errorFields = validateMessage.errors.map((err) => err.instancePath);
+
+                alert("Invalid message, errors in fields : " + errorFields);
+                return;
+            }
             socket.emit("message", message);
             setMessageInput("");
         }
@@ -46,9 +49,9 @@ const Chat: FC = () => {
     function getContrastingColor(hex: string): string {
         hex = hex.replace("#", "");
 
-        const r = parseInt(hex.substr(0, 2), 16);
-        const g = parseInt(hex.substr(2, 2), 16);
-        const b = parseInt(hex.substr(4, 2), 16);
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
 
         const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
