@@ -42,6 +42,7 @@ const Chat: FC = () => {
                 return;
             }
             socket.emit("message", message);
+            setMessages((prev) => [...prev, message]);
             setMessageInput("");
         }
     };

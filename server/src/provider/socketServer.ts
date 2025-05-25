@@ -15,8 +15,8 @@ export const setupSocketServer = () => {
 
         // Listen for incoming messages from clients
         socket.on("message", (message) => {
-            // Broadcast the message to all connected clients
-            io.emit("message", message);
+            // Broadcast the message to all connected clients except the sender
+            io.except(socket.id).emit("message", message);
         });
 
         // Handle disconnections
