@@ -52,6 +52,12 @@
     color: #888;
 }
 
+.message-box-wrapper {
+    display: inline-block;
+    position: relative;
+    max-width: 70%;
+}
+
 .input-container {
     display: flex;
     justify-content: space-between;
@@ -75,5 +81,32 @@
     box-shadow: 0 4px 8px rgb(211, 211, 211);
 }
 
+.login-group{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.login-group .text-input{
+    width:90%;
+}
 
+.color-input{
+    display:flex;
+    width:100%;
+    justify-content: space-between;
+}
 
+.color-input label{
+    font-weight: bold;
+}
+
+.color-input input{
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgb(211, 211, 211);
+}
+
+.error{
+    color: red;
+    font-size: 0.9em;
+}
