@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { socket } from "../socket.ts";
+import { socket } from "../services/Socket.ts";
 
 type LoginProps = {
     user: { name: string; color: string };
