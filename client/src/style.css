@@ -110,3 +110,16 @@
     color: red;
     font-size: 0.9em;
 }
+
+.schema-pop-up {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(211, 211, 211);
+    z-index: 10;
+    transform:  translateY(-120%);
+}

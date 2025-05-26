@@ -3,6 +3,7 @@ import { socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
 import { v4 as uuidv4 } from "uuid";
 import { type Message, validateMessage } from "../../services/Validation.ts";
+import SchemaSelection from "./SchemaSelection.tsx";
 
 const Chat: FC = () => {
     const [messages, setMessages] = useState<Array<Message>>([]);
@@ -97,6 +98,7 @@ const Chat: FC = () => {
                             }}
                             onChange={(e) => setMessageInput(e.target.value)}
                         />
+                        <SchemaSelection />
                         <button className="send-button" onClick={sendMessage}>
                             Send
                         </button>
