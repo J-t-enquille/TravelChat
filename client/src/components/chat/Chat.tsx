@@ -1,4 +1,4 @@
-import { type FC, useContext, useEffect, useState } from "react";
+import { type FC, useContext, useEffect, useRef, useState } from "react";
 import { socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +10,8 @@ const Chat: FC = () => {
     const [messageInput, setMessageInput] = useState("");
     const { user } = useContext(Context);
 
+    const messageList = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         socket.on("message", (message) => {
             setMessages((prev) => [...prev, message]);
@@ -19,6 +21,11 @@ const Chat: FC = () => {
             socket.off("message");
         };
     }, []);
+
+    useEffect(() => {
+        if (messageList.current)
+            messageList.current.scrollTo({ behavior: "smooth", top: messageList.current.scrollHeight });
+    }, [messageList, messages]);
 
     const sendMessage = () => {
         if (!socket.id) {
@@ -63,7 +70,7 @@ const Chat: FC = () => {
     return (
         <div className="container">
             <div className="card">
-                <div className="messages-list">
+                <div className="messages-list" ref={messageList}>
                     {messages.map((msg) => {
                         const isOwnMessage = msg.senderId === socket.id;
 
