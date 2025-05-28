@@ -1,8 +1,10 @@
-import { type FC, useCallback, useEffect, useRef, useState } from "react";
+import { type FC, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FaWrench } from "react-icons/fa";
 import type { RJSFSchema } from "@rjsf/utils";
 import FormDialog from "../tools/FormDialog.tsx";
 import type { IconType } from "react-icons";
+import { sendMessage } from "../../services/Socket.ts";
+import { Context } from "../../services/Context.ts";
 
 type Extension = {
     name: string;
@@ -37,6 +39,7 @@ const exampleExtension: Extension = {
 const extensions: Extension[] = [exampleExtension];
 
 const SchemaSelection: FC = () => {
+    const { user, setMessages } = useContext(Context);
     const [selectedSchema, setSelectedSchema] = useState<number | undefined>(undefined);
 
     const [selectionVisible, setSelectionVisible] = useState(false);
@@ -93,6 +96,10 @@ const SchemaSelection: FC = () => {
                     schema={extensions[selectedSchema].schema}
                     onClose={hideDialog}
                     visible={dialogVisible}
+                    onSubmit={(ev) => {
+                        const msg = sendMessage(JSON.stringify(ev.formData), user);
+                        if (msg) setMessages((prev) => [...prev, msg]);
+                    }}
                     log
                 />
             )}

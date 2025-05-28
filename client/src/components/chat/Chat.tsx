@@ -1,12 +1,10 @@
 import { type FC, useContext, useEffect, useRef, useState } from "react";
-import { socket } from "../../services/Socket.ts";
+import { sendMessage, socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
-import { v4 as uuidv4 } from "uuid";
-import { type Message, validateMessage } from "../../services/Validation.ts";
 import SchemaSelection from "./SchemaSelection.tsx";
 
 const Chat: FC = () => {
-    const [messages, setMessages] = useState<Array<Message>>([]);
+    const { setMessages, messages } = useContext(Context);
     const [messageInput, setMessageInput] = useState("");
     const { user } = useContext(Context);
 
@@ -27,32 +25,11 @@ const Chat: FC = () => {
             messageList.current.scrollTo({ behavior: "smooth", top: messageList.current.scrollHeight });
     }, [messageList, messages]);
 
-    const sendMessage = () => {
-        if (!socket.id) {
-            console.error("Socket ID is not available");
-            return;
-        }
-        if (messageInput.trim() !== "") {
-            const message = {
-                messageId: uuidv4(),
-                text: messageInput,
-                timestamp: new Date().toISOString(),
-                senderId: socket.id,
-                senderName: user.name,
-                senderColor: user.color,
-            };
-            const valid = validateMessage(message);
-            if (!valid && validateMessage.errors) {
-                console.error("Validation errors", validateMessage.errors);
-                const errorFields = validateMessage.errors.map((err) => err.instancePath);
-
-                alert("Invalid message, errors in fields : " + errorFields);
-                return;
-            }
-            socket.emit("message", message);
-            setMessages((prev) => [...prev, message]);
-            setMessageInput("");
-        }
+    const send = () => {
+        const msg = sendMessage(messageInput, user);
+        if (!msg) return;
+        setMessages((prev) => [...prev, msg]);
+        setMessageInput("");
     };
 
     function getContrastingColor(hex: string): string {
@@ -101,12 +78,12 @@ const Chat: FC = () => {
                             placeholder="Type your message..."
                             value={messageInput}
                             onKeyDown={(event) => {
-                                if (event.key === "Enter") sendMessage();
+                                if (event.key === "Enter") send();
                             }}
                             onChange={(e) => setMessageInput(e.target.value)}
                         />
                         <SchemaSelection />
-                        <button className="send-button" onClick={sendMessage}>
+                        <button className="send-button" onClick={send}>
                             Send
                         </button>
                     </div>

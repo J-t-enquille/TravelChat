@@ -32,8 +32,9 @@ const FormDialog: FC<FormDialogProps> = ({ visible, onClose, schema, onDataChang
                 console.log("Form submitted:", data);
             }
             onSubmit?.(data);
+            onClose();
         },
-        [onSubmit, log],
+        [onSubmit, log, onClose],
     );
 
     // Generate uiSchema from schema properties
