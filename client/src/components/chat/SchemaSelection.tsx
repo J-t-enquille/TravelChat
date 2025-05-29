@@ -1,42 +1,38 @@
 import { type FC, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FaWrench } from "react-icons/fa";
+import { FaWrench, FaBeer, FaPastafarianism } from "react-icons/fa";
 import type { RJSFSchema } from "@rjsf/utils";
 import FormDialog from "../tools/FormDialog.tsx";
 import type { IconType } from "react-icons";
 import { sendMessage } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
+import { schemas } from "../../schemas"; // Import your example schema
 
 type Extension = {
     name: string;
     icon: IconType;
     schema: RJSFSchema;
 };
-
-const exampleSchema: RJSFSchema = {
-    title: "Example Schema",
-    type: "object",
-    required: ["task"],
-    properties: {
-        task: { type: "string", title: "Task", default: "Make a coffee for Lorenzo" },
-        priority: {
-            type: "string",
-            title: "Priority",
-            enum: ["low", "medium", "high"],
-            default: "high",
-            description: "Select the priority of the task",
-        },
-        done: { type: "boolean", title: "Done?", default: false },
-    },
+/**
+ * Selects an icon based on the schema name.
+ * @param name
+ */
+const selectIcon = (name?: string): IconType => {
+    if (name === "Example Schema") {
+        return FaWrench;
+    }
+    if (name === "Example Schema 2") {
+        return FaPastafarianism;
+    }
+    return FaBeer;
 };
 
-const exampleExtension: Extension = {
-    name: "Example Extension",
-    icon: FaWrench,
-    schema: exampleSchema,
-};
+const sc = schemas as RJSFSchema[];
 
-// Add more extensions here as needed following the same Extension structure type
-const extensions: Extension[] = [exampleExtension];
+const extensions: Extension[] = sc.map((schema) => ({
+    name: schema.title || "Untitled Schema",
+    icon: selectIcon(schema.title),
+    schema: schema,
+}));
 
 const SchemaSelection: FC = () => {
     const { user, setMessages } = useContext(Context);
@@ -75,20 +71,28 @@ const SchemaSelection: FC = () => {
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <h3 style={{ margin: 0 }}>Plugins</h3>
                     </div>
-                    {extensions.map((ext, index) => {
-                        return (
-                            <button
-                                key={index}
-                                title={ext.name}
-                                onClick={() => {
-                                    setSelectedSchema(index);
-                                    showDialog();
-                                }}
-                            >
-                                {ext.icon({})}
-                            </button>
-                        );
-                    })}
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(50px, 1fr))",
+                            gap: "10px",
+                        }}
+                    >
+                        {extensions.map((ext, index) => {
+                            return (
+                                <button
+                                    key={index}
+                                    title={ext.name}
+                                    onClick={() => {
+                                        setSelectedSchema(index);
+                                        showDialog();
+                                    }}
+                                >
+                                    {ext.icon({})}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             )}
             {selectedSchema !== undefined && (
