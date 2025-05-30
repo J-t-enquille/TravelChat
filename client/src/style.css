@@ -1,4 +1,4 @@
-#root, html, body {
+html, body, body>#root {
     height: 100%;
     width: 100%;
 }
@@ -12,23 +12,26 @@
     width: 100%;
     background-color: #94b5ea;
     gap: 20px;
+    overflow-y: auto;
 }
 
 .container .card {
     background-color: #e7e7e7;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgb(211, 211, 211);
-    padding: 20px;
+    padding: 10px;
     height: 600px;
     width: 500px;
     gap: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: auto;
 }
 
-.message-list {
+.messages-list {
     display: flex;
+    flex: 1;
     flex-direction: column;
     overflow-y: auto;
 }
@@ -109,4 +112,104 @@
 .error{
     color: red;
     font-size: 0.9em;
+}
+
+.schema-pop-up {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(211, 211, 211);
+    z-index: 1;
+    transform:  translateY(-120%);
+}
+
+
+
+.dialog-overlay {
+    background-color: white;
+    width: 60%;
+    color: black;
+    overflow: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 0 0.5rem 0.25rem hsl(0 0% 0% / 10%);
+}
+
+.dialog-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
+}
+
+.dialog-header {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgb(192, 192, 192);
+}
+
+.dialog-header>h2 {
+    margin: 0;
+}
+
+
+.dialog-content {
+    overflow: auto;
+    padding: 10px;
+
+}
+
+.control-label {
+    font-weight: bold;
+}
+
+.rjsf-field{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.field-description {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+}
+
+.header>h2{
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.awaiting-answer {
+    border: red 2px solid;
+    background-color: #f87a83;
+}
+
+.answer-pop-up {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(211, 211, 211);
+    z-index: 1;
+    transform:  translateY(60%) translateX(85%);
 }

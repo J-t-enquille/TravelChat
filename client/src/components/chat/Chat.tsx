@@ -1,49 +1,45 @@
-import { type FC, useContext, useEffect, useState } from "react";
-import { socket } from "../../services/Socket.ts";
+import { type FC, useContext, useEffect, useRef, useState } from "react";
+import { sendMessage, socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
-import { v4 as uuidv4 } from "uuid";
-import { type Message, validateMessage } from "../../services/Validation.ts";
+import SchemaSelection from "./SchemaSelection.tsx";
+import { identifyMessageSchema } from "../../schemas";
+import Answer from "./Answer.tsx";
 
 const Chat: FC = () => {
-    const [messages, setMessages] = useState<Array<Message>>([]);
+    const { setMessages, messages } = useContext(Context);
     const [messageInput, setMessageInput] = useState("");
-    const { user } = useContext(Context);
+    const { user, waitingForResponse, setWaitingForResponse } = useContext(Context);
+
+    const messageList = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         socket.on("message", (message) => {
-            setMessages((prev) => [...prev, message]);
+            const schema = identifyMessageSchema(message, () => setMessages((prev) => [...prev, message]));
+            // Question asked
+            if (schema) {
+                setWaitingForResponse((prev) => [...prev, message]);
+                setMessages((prev) => [
+                    ...prev,
+                    { ...message, text: `Awaiting answer... For ${schema.title} extension` },
+                ]);
+            }
         });
 
         return () => {
             socket.off("message");
         };
-    }, []);
+    }, [setWaitingForResponse, setMessages]);
 
-    const sendMessage = () => {
-        if (!socket.id) {
-            console.error("Socket ID is not available");
-            return;
-        }
-        if (messageInput.trim() !== "") {
-            const message = {
-                messageId: uuidv4(),
-                text: messageInput,
-                timestamp: new Date().toISOString(),
-                senderId: socket.id,
-                senderName: user.name,
-                senderColor: user.color,
-            };
-            const valid = validateMessage(message);
-            if (!valid && validateMessage.errors) {
-                console.error("Validation errors", validateMessage.errors);
-                const errorFields = validateMessage.errors.map((err) => err.instancePath);
+    useEffect(() => {
+        if (messageList.current)
+            messageList.current.scrollTo({ behavior: "smooth", top: messageList.current.scrollHeight });
+    }, [messageList, messages]);
 
-                alert("Invalid message, errors in fields : " + errorFields);
-                return;
-            }
-            socket.emit("message", message);
-            setMessageInput("");
-        }
+    const send = () => {
+        const msg = sendMessage(messageInput, user);
+        if (!msg) return;
+        setMessages((prev) => [...prev, msg]);
+        setMessageInput("");
     };
 
     function getContrastingColor(hex: string): string {
@@ -61,7 +57,11 @@ const Chat: FC = () => {
     return (
         <div className="container">
             <div className="card">
-                <div className="messages-list">
+                <div className={"header"}>
+                    <h2>{user.name}</h2>
+                    {waitingForResponse.length > 0 && <Answer />}
+                </div>
+                <div className="messages-list" ref={messageList}>
                     {messages.map((msg) => {
                         const isOwnMessage = msg.senderId === socket.id;
 
@@ -92,11 +92,12 @@ const Chat: FC = () => {
                             placeholder="Type your message..."
                             value={messageInput}
                             onKeyDown={(event) => {
-                                if (event.key === "Enter") sendMessage();
+                                if (event.key === "Enter") send();
                             }}
                             onChange={(e) => setMessageInput(e.target.value)}
                         />
-                        <button className="send-button" onClick={sendMessage}>
+                        <SchemaSelection />
+                        <button className="send-button" onClick={send}>
                             Send
                         </button>
                     </div>

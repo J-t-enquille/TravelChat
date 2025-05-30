@@ -1,0 +1,28 @@
+{
+    "title": "Example Schema 2",
+    "type": "object",
+    "required": [
+        "pasta", "buy"
+    ],
+    "properties": {
+        "pasta": {
+            "type": "string",
+            "title": "Pasta Brand",
+            "default": "Barilla",
+            "enum": [
+                "Barilla",
+                "De Cecco",
+                "Rummo",
+                "Divella",
+                "Garofalo"
+            ],
+            "description": "Select your favorite pasta brand"
+        },
+        "buy": {
+            "type": "number",
+            "title": "Buy",
+            "default": 1,
+            "description": "How many packs of pasta do you want to buy?"
+        }
+    }
+}

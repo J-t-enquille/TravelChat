@@ -1,0 +1,30 @@
+{
+    "title": "Example Schema",
+    "type": "object",
+    "required": [
+        "task"
+    ],
+    "properties": {
+        "task": {
+            "type": "string",
+            "title": "Task",
+            "default": "Make a coffee for Lorenzo"
+        },
+        "priority": {
+            "type": "string",
+            "title": "Priority",
+            "enum": [
+                "low",
+                "medium",
+                "high"
+            ],
+            "default": "high",
+            "description": "Select the priority of the task"
+        },
+        "done": {
+            "type": "boolean",
+            "title": "Done?",
+            "default": false
+        }
+    }
+}
