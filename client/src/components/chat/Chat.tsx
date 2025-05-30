@@ -2,23 +2,33 @@ import { type FC, useContext, useEffect, useRef, useState } from "react";
 import { sendMessage, socket } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
 import SchemaSelection from "./SchemaSelection.tsx";
+import { identifyMessageSchema } from "../../schemas";
+import Answer from "./Answer.tsx";
 
 const Chat: FC = () => {
     const { setMessages, messages } = useContext(Context);
     const [messageInput, setMessageInput] = useState("");
-    const { user } = useContext(Context);
+    const { user, waitingForResponse, setWaitingForResponse } = useContext(Context);
 
     const messageList = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         socket.on("message", (message) => {
-            setMessages((prev) => [...prev, message]);
+            const schema = identifyMessageSchema(message, () => setMessages((prev) => [...prev, message]));
+            // Question asked
+            if (schema) {
+                setWaitingForResponse((prev) => [...prev, message]);
+                setMessages((prev) => [
+                    ...prev,
+                    { ...message, text: `Awaiting answer... For ${schema.title} extension` },
+                ]);
+            }
         });
 
         return () => {
             socket.off("message");
         };
-    }, []);
+    }, [setWaitingForResponse, setMessages]);
 
     useEffect(() => {
         if (messageList.current)
@@ -47,6 +57,10 @@ const Chat: FC = () => {
     return (
         <div className="container">
             <div className="card">
+                <div className={"header"}>
+                    <h2>{user.name}</h2>
+                    {waitingForResponse.length > 0 && <Answer />}
+                </div>
                 <div className="messages-list" ref={messageList}>
                     {messages.map((msg) => {
                         const isOwnMessage = msg.senderId === socket.id;

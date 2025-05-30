@@ -12,6 +12,7 @@ function App() {
         name: "",
         color: "#4874c5",
     });
+    const [waitingForResponse, setWaitingForResponse] = useState<Array<Message>>([]);
 
     useEffect(() => {
         const onConnect = () => setSocketConnected(true);
@@ -27,7 +28,9 @@ function App() {
     }, []);
 
     return (
-        <Context.Provider value={{ socketConnected, user, setUser, messages, setMessages }}>
+        <Context.Provider
+            value={{ socketConnected, user, setUser, messages, setMessages, waitingForResponse, setWaitingForResponse }}
+        >
             <Layout />
         </Context.Provider>
     );

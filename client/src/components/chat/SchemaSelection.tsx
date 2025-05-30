@@ -1,29 +1,15 @@
 import { type FC, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FaWrench, FaBeer, FaPastafarianism } from "react-icons/fa";
 import type { RJSFSchema } from "@rjsf/utils";
 import FormDialog from "../tools/FormDialog.tsx";
 import type { IconType } from "react-icons";
 import { sendMessage } from "../../services/Socket.ts";
 import { Context } from "../../services/Context.ts";
-import { schemas } from "../../schemas"; // Import your example schema
+import { schemas, selectIcon } from "../../schemas";
 
 type Extension = {
     name: string;
     icon: IconType;
     schema: RJSFSchema;
-};
-/**
- * Selects an icon based on the schema name.
- * @param name
- */
-const selectIcon = (name?: string): IconType => {
-    if (name === "Example Schema") {
-        return FaWrench;
-    }
-    if (name === "Example Schema 2") {
-        return FaPastafarianism;
-    }
-    return FaBeer;
 };
 
 const sc = schemas as RJSFSchema[];
@@ -97,14 +83,21 @@ const SchemaSelection: FC = () => {
             )}
             {selectedSchema !== undefined && (
                 <FormDialog
+                    title={"Preview answer Schema"}
                     schema={extensions[selectedSchema].schema}
                     onClose={hideDialog}
                     visible={dialogVisible}
                     onSubmit={(ev) => {
                         const msg = sendMessage(JSON.stringify(ev.formData), user);
-                        if (msg) setMessages((prev) => [...prev, msg]);
+                        if (msg) {
+                            const titleMsg = {
+                                ...msg,
+                                text: `Sent a message using the ${extensions[selectedSchema].name} extension`,
+                            };
+                            setMessages((prev) => [...prev, titleMsg]);
+                        }
                     }}
-                    log
+                    ask
                 />
             )}
         </div>

@@ -21,6 +21,7 @@
         "buy": {
             "type": "number",
             "title": "Buy",
+            "default": 1,
             "description": "How many packs of pasta do you want to buy?"
         }
     }

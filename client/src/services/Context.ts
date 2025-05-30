@@ -12,6 +12,8 @@ export type ContextType = {
     setUser: Dispatch<SetStateAction<UserType>>;
     messages: Message[];
     setMessages: Dispatch<SetStateAction<Message[]>>;
+    waitingForResponse: Message[];
+    setWaitingForResponse: Dispatch<SetStateAction<Message[]>>;
 };
 
 export const Context = createContext<ContextType>({
@@ -20,4 +22,6 @@ export const Context = createContext<ContextType>({
     setUser: () => {},
     messages: [],
     setMessages: () => {},
+    waitingForResponse: [],
+    setWaitingForResponse: () => {},
 });

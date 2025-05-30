@@ -31,6 +31,7 @@ html, body, body>#root {
 
 .messages-list {
     display: flex;
+    flex: 1;
     flex-direction: column;
     overflow-y: auto;
 }
@@ -126,6 +127,8 @@ html, body, body>#root {
     transform:  translateY(-120%);
 }
 
+
+
 .dialog-overlay {
     background-color: white;
     width: 60%;
@@ -178,4 +181,35 @@ html, body, body>#root {
 .field-description {
     font-size: 0.9em;
     color: #666;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+}
+
+.header>h2{
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.awaiting-answer {
+    border: red 2px solid;
+    background-color: #f87a83;
+}
+
+.answer-pop-up {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(211, 211, 211);
+    z-index: 1;
+    transform:  translateY(60%) translateX(85%);
 }
