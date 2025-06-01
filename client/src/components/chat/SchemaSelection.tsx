@@ -42,6 +42,8 @@ const SchemaSelection: FC = () => {
         if (selectionPopUp.current && selectionVisible) selectionPopUp.current.focus();
     }, [selectionPopUp, selectionVisible]);
 
+    const selectedExtension = selectedSchema !== undefined ? extensions[selectedSchema] : undefined;
+
     return (
         <div>
             <button className={"schema-button"} onClick={!selectionVisible ? showSelection : hideSelection}>
@@ -81,10 +83,10 @@ const SchemaSelection: FC = () => {
                     </div>
                 </div>
             )}
-            {selectedSchema !== undefined && (
+            {selectedExtension && (
                 <FormDialog
                     title={"Preview answer Schema"}
-                    schema={extensions[selectedSchema].schema}
+                    schema={selectedExtension.schema}
                     onClose={hideDialog}
                     visible={dialogVisible}
                     onSubmit={(ev) => {
@@ -92,7 +94,7 @@ const SchemaSelection: FC = () => {
                         if (msg) {
                             const titleMsg = {
                                 ...msg,
-                                text: `Sent a message using the ${extensions[selectedSchema].name} extension`,
+                                text: `Sent a message using the ${selectedExtension.name} extension`,
                             };
                             setMessages((prev) => [...prev, titleMsg]);
                         }

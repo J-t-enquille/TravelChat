@@ -1,0 +1,19 @@
+{
+    "$id": "https://polytech.fr/schema/schemas/binaryQuestion.json",
+    "title": "Binary Question Schema",
+    "type": "object",
+    "required": [
+        "binary"
+    ],
+    "properties": {
+        "binary": {
+            "type": "string",
+            "title": "titleBinary",
+            "enum": [
+                "option1",
+                "option2"
+            ]
+        }
+
+    }
+}

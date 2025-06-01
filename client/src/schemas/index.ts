@@ -1,12 +1,13 @@
-import { FaBeer, FaPastafarianism, FaWrench } from "react-icons/fa";
+import { FaBeer, FaPastafarianism, FaWrench, FaQuestion } from "react-icons/fa";
 import exampleSchema from "./exampleSchema.json";
 import exampleSchema2 from "./exampleSchema2.json";
+import binaryQuestion from "./binaryQuestion.json";
 import type { IconType } from "react-icons";
 import type { Message } from "../services/Validation.ts";
 import validator from "@rjsf/validator-ajv8";
 import type { RJSFSchema } from "@rjsf/utils";
 
-export const schemas = [exampleSchema, exampleSchema2];
+export const schemas = [exampleSchema, exampleSchema2, binaryQuestion];
 
 /**
  * Selects an icon based on the schema name.
@@ -18,6 +19,9 @@ export const selectIcon = (name?: string): IconType => {
     }
     if (name === "Example Schema 2") {
         return FaPastafarianism;
+    }
+    if (name === "Binary Question Schema") {
+        return FaQuestion;
     }
     return FaBeer;
 };

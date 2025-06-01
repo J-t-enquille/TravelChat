@@ -1,9 +1,10 @@
-import { type FC, useCallback } from "react";
+import { type FC, useCallback, useState, useEffect } from "react";
 import type { RJSFSchema, RJSFValidationError, UiSchema } from "@rjsf/utils";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 import Dialog from "./Dialog.tsx";
 import type { IChangeEvent } from "@rjsf/core";
+import { BinaryQuestionForm } from "./BinaryQuestionForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -15,6 +16,7 @@ type FormDialogProps = {
     onError?: (errors: RJSFValidationError[]) => void;
     log?: boolean;
     ask?: boolean; // If it's a question or not
+    schemaToSend?: RJSFSchema;
 };
 
 const FormDialog: FC<FormDialogProps> = ({
@@ -28,6 +30,13 @@ const FormDialog: FC<FormDialogProps> = ({
     title,
     ask,
 }) => {
+    const [editableSchema, setEditableSchema] = useState<RJSFSchema>(schema);
+    const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
+
+    useEffect(() => {
+        setEditableSchema(schema);
+    }, [schema]);
+
     const handleDataChange = useCallback(
         (data: IChangeEvent<unknown, RJSFSchema>) => {
             if (log) {
@@ -72,14 +81,20 @@ const FormDialog: FC<FormDialogProps> = ({
 
     return (
         <Dialog visible={visible} title={title ?? schema.title ?? "Add Title to you schema"} onClose={onClose}>
-            <Form
-                schema={schema}
-                uiSchema={uiSchema}
-                validator={validator}
-                onChange={handleDataChange}
-                onSubmit={handleSubmit}
-                onError={handleError}
-            />
+            {isBinaryQuestion && ask ? (
+                <BinaryQuestionForm onClose={onClose} />
+            ) : (
+                <>
+                    <Form
+                        schema={editableSchema}
+                        uiSchema={uiSchema}
+                        validator={validator}
+                        onChange={handleDataChange}
+                        onSubmit={handleSubmit}
+                        onError={handleError}
+                    />
+                </>
+            )}
         </Dialog>
     );
 };

@@ -4,6 +4,7 @@ import { Context } from "../../services/Context.ts";
 import SchemaSelection from "./SchemaSelection.tsx";
 import { identifyMessageSchema } from "../../schemas";
 import Answer from "./Answer.tsx";
+import type { RJSFSchema } from "@rjsf/utils";
 
 const Chat: FC = () => {
     const { setMessages, messages } = useContext(Context);
@@ -15,13 +16,19 @@ const Chat: FC = () => {
     useEffect(() => {
         socket.on("message", (message) => {
             const schema = identifyMessageSchema(message, () => setMessages((prev) => [...prev, message]));
+            console.log("message", message);
             // Question asked
-            if (schema) {
-                setWaitingForResponse((prev) => [...prev, message]);
-                setMessages((prev) => [
-                    ...prev,
-                    { ...message, text: `Awaiting answer... For ${schema.title} extension` },
-                ]);
+            if (message.schema) {
+                const schema = JSON.parse(message.schema) as RJSFSchema;
+                console.log("schema", schema);
+
+                if (schema) {
+                    setWaitingForResponse((prev) => [...prev, message]);
+                    setMessages((prev) => [
+                        ...prev,
+                        { ...message, text: `Awaiting answer... For ${schema.title} extension` },
+                    ]);
+                }
             }
         });
 
