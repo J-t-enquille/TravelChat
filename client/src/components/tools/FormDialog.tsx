@@ -82,7 +82,7 @@ const FormDialog: FC<FormDialogProps> = ({
     return (
         <Dialog visible={visible} title={title ?? schema.title ?? "Add Title to you schema"} onClose={onClose}>
             {isBinaryQuestion && ask ? (
-                <BinaryQuestionForm onClose={onClose} />
+                <BinaryQuestionForm onClose={onClose} schema={schema} />
             ) : (
                 <>
                     <Form

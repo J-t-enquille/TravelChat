@@ -1,6 +1,6 @@
 import { type FC, useCallback, useContext, useState } from "react";
 import { Context } from "../../services/Context.ts";
-import { identifyMessageSchema, selectIcon } from "../../schemas";
+import { selectIcon } from "../../schemas";
 import type { RJSFSchema } from "@rjsf/utils";
 import FormDialog from "../tools/FormDialog.tsx";
 import { sendMessage } from "../../services/Socket.ts";
@@ -39,7 +39,7 @@ const AnswerButton: FC = () => {
                         }}
                     >
                         {waitingForResponse.map((message, index) => {
-                            const schema = identifyMessageSchema(message);
+                            const schema = JSON.parse(message.schema!) as RJSFSchema;
                             return (
                                 <button
                                     key={index}

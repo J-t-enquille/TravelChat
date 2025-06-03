@@ -1,13 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { type FC, useContext, useState } from "react";
 import { Context } from "../../services/Context.ts";
 import { sendMessage } from "../../services/Socket.ts";
 import "./BinaryQuestion.css";
+import type { RJSFSchema } from "@rjsf/utils";
 
 interface BinaryQuestionFormProps {
     onClose: () => void;
+    schema: RJSFSchema;
 }
 
-export const BinaryQuestionForm: React.FC<BinaryQuestionFormProps> = ({ onClose }) => {
+export const BinaryQuestionForm: FC<BinaryQuestionFormProps> = ({ onClose, schema }) => {
     const { user, setMessages } = useContext(Context);
     const [question, setQuestion] = useState("");
     const [option1, setOption1] = useState("");
@@ -16,17 +18,16 @@ export const BinaryQuestionForm: React.FC<BinaryQuestionFormProps> = ({ onClose 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const binaryData = {
-            binary: option1, // On envoie la première option comme valeur par défaut
-            question,
-            options: [option1, option2],
-        };
+        const updatedSchema = JSON.stringify(schema)
+            .replace("%BINARY_QUESTION%", question)
+            .replaceAll("%OPTION1%", option1)
+            .replaceAll("%OPTION2%", option2);
 
-        const msg = sendMessage(JSON.stringify(binaryData), user);
+        const msg = sendMessage("useless", user, updatedSchema);
         if (msg) {
             const messageWithSchema = {
                 ...msg,
-                schema: "binaryQuestion",
+                text: `${question} ${option1} / ${option2}`,
             };
             setMessages((prev) => [...prev, messageWithSchema]);
             onClose();
