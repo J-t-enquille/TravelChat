@@ -33,14 +33,28 @@ export const ExtensionForm: FC<ExtensionFormProps> = ({ onClose, schema, initial
     return (
         <div style={{ display: "flex", flexDirection: "column", padding: 8 }}>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <label
+                    htmlFor="questionText"
+                    style={{
+                        marginLeft: 30,
+                        marginBottom: 8,
+                        fontWeight: "600",
+                        fontSize: "1rem",
+                        color: "#333",
+                        userSelect: "none",
+                    }}
+                >
+                    {questionText ? "Edit your question:" : "Enter your question:"}
+                </label>
                 <input
                     type="text"
                     id="questionText"
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
-                    style={{ resize: "vertical", padding: 4 }}
+                    style={{ padding: 10, maxWidth: "80%", margin: "0 auto" }}
+                    className={"text-input"}
                 />
-                <div style={{ height: 1, backgroundColor: "gray" }} />
+                <div style={{ height: 1, backgroundColor: "gray", marginTop: "15px" }} />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <button type="submit">Submit</button>
                 </div>
