@@ -4,6 +4,7 @@ import { Context } from "../../services/Context.ts";
 import SchemaSelection from "./SchemaSelection.tsx";
 import Answer from "./Answer.tsx";
 import type { RJSFSchema } from "@rjsf/utils";
+import type { Message } from "../../services/Validation.ts";
 
 const Chat: FC = () => {
     const { setMessages, messages } = useContext(Context);
@@ -13,14 +14,32 @@ const Chat: FC = () => {
     const messageList = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        socket.on("message", (message) => {
+        socket.on("message", (message: Message) => {
             // Question asked
             if (message.schema) {
                 const schema = JSON.parse(message.schema) as RJSFSchema;
+                const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
+                const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
 
-                if (schema) {
+                if (!message.answer) {
                     setWaitingForResponse((prev) => [...prev, message]);
                     setMessages((prev) => [...prev, { ...message, text: `Awaiting answer... For ${schema.title}` }]);
+                } else {
+                    if (isBinaryQuestion) {
+                        const msg = {
+                            ...message,
+                            text: `Answer to ${schema.title} is ${JSON.parse(message.text).binary}`,
+                        };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isMultipleChoice) {
+                        const data = JSON.parse(message.text);
+                        const text = `Answer to ${schema.title} is ${typeof data.options === "string" ? data.options : data.options.join(", ")}`;
+                        const msg = {
+                            ...message,
+                            text,
+                        };
+                        setMessages((prev) => [...prev, msg]);
+                    }
                 }
             } else {
                 setMessages((prev) => [...prev, message]);

@@ -1,0 +1,18 @@
+{
+    "$id": "https://polytech.fr/schema/schemas/multipleChoice.json",
+    "title": "Multiple Choice Question",
+    "type": "object",
+    "required": [
+        "options"
+    ],
+    "properties": {
+        "options": {
+            "type": "string",
+            "title": "MULTIPLE_CHOICE_QUESTION",
+            "enum": [
+                ""
+            ],
+            "default": ""
+        }
+    }
+}
