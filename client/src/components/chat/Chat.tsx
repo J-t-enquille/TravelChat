@@ -78,6 +78,9 @@ const Chat: FC = () => {
     };
 
     function getContrastingColor(hex: string): string {
+        if (!hex) {
+            return "#000000";
+        }
         hex = hex.replace("#", "");
 
         const r = parseInt(hex.slice(0, 2), 16);
@@ -107,7 +110,9 @@ const Chat: FC = () => {
                                     className="message-box"
                                     style={{
                                         backgroundColor: isOwnMessage ? user.color : msg.senderColor,
-                                        color: getContrastingColor(isOwnMessage ? user.color : msg.senderColor),
+                                        color: getContrastingColor(
+                                            isOwnMessage ? user.color : msg.senderColor || "#cccccc",
+                                        ),
                                     }}
                                 >
                                     {msg.text}
