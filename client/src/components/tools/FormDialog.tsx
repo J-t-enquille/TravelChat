@@ -6,6 +6,7 @@ import type { IChangeEvent } from "@rjsf/core";
 import { BinaryQuestionForm } from "../chat/BinaryQuestionForm.tsx";
 import validator from "@rjsf/validator-ajv8";
 import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
+import { TravelPreferencesForm } from "../chat/TravelPreferencesForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -33,6 +34,7 @@ const FormDialog: FC<FormDialogProps> = ({
 }) => {
     const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
     const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
+    const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
 
     // Reset the validator when the component is unmounted
     useEffect(() => {
@@ -87,6 +89,8 @@ const FormDialog: FC<FormDialogProps> = ({
                 <BinaryQuestionForm onClose={onClose} schema={schema} />
             ) : isMultipleChoice && ask ? (
                 <MultipleChoiceForm onClose={onClose} schema={schema} />
+            ) : isTravelPreferences && ask ? (
+                <TravelPreferencesForm onClose={onClose} schema={schema} />
             ) : (
                 <>
                     <Form

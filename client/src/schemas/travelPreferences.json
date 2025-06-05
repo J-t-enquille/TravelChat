@@ -1,0 +1,79 @@
+{
+    "$id": "https://polytech.fr/schema/schemas/travelPreferences.json",
+    "title": "Travel Preferences",
+    "type": "object",
+    "required": ["destination", "travel_period", "budget", "housing_type", "number_of_rooms", "number_of_travelers", "meal_plan"],
+    "properties": {
+        "destination": {
+            "type": "string",
+            "enum": ["Europe", "South America", "North America", "North Africa", "Asia"],
+            "title": "Destination"
+        },
+        "travel_period": {
+            "title": "Travel period",
+            "oneOf": [
+                {
+                    "title": "Specific dates",
+                    "type": "object",
+                    "properties": {
+                        "start_date": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Start date"
+                        },
+                        "end_date": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "End date"
+                        }
+                    },
+                    "required": ["start_date", "end_date"]
+                },
+                {
+                    "title": "Approximate duration",
+                    "type": "object",
+                    "properties": {
+                        "number_of_days": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30,
+                            "title": "Number of days"
+                        },
+                        "month": {
+                            "type": "string",
+                            "enum": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                            "title": "Month"
+                        }
+                    },
+                    "required": ["number_of_days", "month"]
+                }
+            ]
+        },
+        "budget": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10000,
+            "title": "Estimated budget"
+        },
+        "housing_type": {
+            "type": "string",
+            "title": "Type of accommodation",
+            "enum": ["Hotel", "Homestay"]
+        },
+        "number_of_rooms": {
+            "type": "integer",
+            "minimum": 1,
+            "title": "Number of rooms"
+        },
+        "number_of_travelers": {
+            "type": "integer",
+            "minimum": 1,
+            "title": "Number of travelers"
+        },
+        "meal_plan": {
+            "type": "string",
+            "enum": ["All inclusive", "Breakfast only", "Half board", "Full board"],
+            "title": "Meal plan"
+        }
+    }
+}

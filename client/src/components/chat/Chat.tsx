@@ -20,7 +20,7 @@ const Chat: FC = () => {
                 const schema = JSON.parse(message.schema) as RJSFSchema;
                 const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
                 const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
-
+                const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
                 if (!message.answer) {
                     setWaitingForResponse((prev) => [...prev, message]);
                     setMessages((prev) => [...prev, { ...message, text: `Awaiting answer... For ${schema.title}` }]);
@@ -38,6 +38,20 @@ const Chat: FC = () => {
                             ...message,
                             text,
                         };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isTravelPreferences) {
+                        const data = JSON.parse(message.text);
+                        let travelPeriodText = "";
+
+                        if (data.travel_period?.month && data.travel_period?.number_of_days) {
+                            travelPeriodText = `${data.travel_period.number_of_days} days in ${data.travel_period.month}`;
+                        } else if (data.travel_period?.start_date && data.travel_period?.end_date) {
+                            travelPeriodText = `${data.travel_period.start_date} to ${data.travel_period.end_date}`;
+                        }
+
+                        const text = `Answer to ${schema.title} is: Destination: ${data.destination}, Travel Period: ${travelPeriodText}, Budget: ${data.budget}, Housing Type: ${data.housing_type}, Number of Rooms: ${data.number_of_rooms}, Number of Travelers: ${data.number_of_travelers}, Meal Plan: ${data.meal_plan}`;
+
+                        const msg = { ...message, text };
                         setMessages((prev) => [...prev, msg]);
                     }
                 }
