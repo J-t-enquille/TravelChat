@@ -1,26 +1,22 @@
-import { FaBeer, FaPastafarianism, FaWrench, FaQuestion } from "react-icons/fa";
-import exampleSchema from "./exampleSchema.json";
-import exampleSchema2 from "./exampleSchema2.json";
+import { FaBeer, FaQuestion, FaCheckSquare } from "react-icons/fa";
+import multipleChoice from "./multipleChoice.json";
 import binaryQuestion from "./binaryQuestion.json";
 import type { IconType } from "react-icons";
 import type { Message } from "../services/Validation.ts";
 import validator from "@rjsf/validator-ajv8";
 import type { RJSFSchema } from "@rjsf/utils";
 
-export const schemas = [exampleSchema, exampleSchema2, binaryQuestion];
+export const schemas = [multipleChoice, binaryQuestion];
 
 /**
  * Selects an icon based on the schema name.
  * @param name
  */
 export const selectIcon = (name?: string): IconType => {
-    if (name === "Example Schema") {
-        return FaWrench;
+    if (name?.replaceAll(" ", "") === "MultipleChoiceQuestion") {
+        return FaCheckSquare;
     }
-    if (name === "Example Schema 2") {
-        return FaPastafarianism;
-    }
-    if (name === "Binary Question Schema") {
+    if (name?.replaceAll(" ", "") === "BinaryQuestion") {
         return FaQuestion;
     }
     return FaBeer;

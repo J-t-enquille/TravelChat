@@ -85,7 +85,6 @@ const SchemaSelection: FC = () => {
             )}
             {selectedExtension && (
                 <FormDialog
-                    title={"Preview answer Schema"}
                     schema={selectedExtension.schema}
                     onClose={hideDialog}
                     visible={dialogVisible}

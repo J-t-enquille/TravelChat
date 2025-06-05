@@ -8,7 +8,7 @@ const URL = "http://localhost:5000";
 
 export const socket = io(URL, { autoConnect: false });
 
-export const sendMessage = (text: string, user: UserType, schema?: string) => {
+export const sendMessage = (text: string, user: UserType, schema?: string, answer?: boolean) => {
     if (!socket.id) {
         console.error("Socket ID is not available");
         return;
@@ -22,6 +22,7 @@ export const sendMessage = (text: string, user: UserType, schema?: string) => {
             senderName: user.name,
             senderColor: user.color,
             schema,
+            answer,
         };
         const valid = validateMessage(message);
         if (!valid && validateMessage.errors) {

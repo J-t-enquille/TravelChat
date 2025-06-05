@@ -1,10 +1,11 @@
-import { type FC, useCallback, useState, useEffect } from "react";
+import { type FC, useCallback, useEffect } from "react";
 import type { RJSFSchema, RJSFValidationError, UiSchema } from "@rjsf/utils";
 import Form from "@rjsf/core";
-import validator from "@rjsf/validator-ajv8";
 import Dialog from "./Dialog.tsx";
 import type { IChangeEvent } from "@rjsf/core";
-import { BinaryQuestionForm } from "./BinaryQuestionForm.tsx";
+import { BinaryQuestionForm } from "../chat/BinaryQuestionForm.tsx";
+import validator from "@rjsf/validator-ajv8";
+import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -30,12 +31,13 @@ const FormDialog: FC<FormDialogProps> = ({
     title,
     ask,
 }) => {
-    const [editableSchema, setEditableSchema] = useState<RJSFSchema>(schema);
     const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
+    const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
 
+    // Reset the validator when the component is unmounted
     useEffect(() => {
-        setEditableSchema(schema);
-    }, [schema]);
+        return validator.reset();
+    }, []);
 
     const handleDataChange = useCallback(
         (data: IChangeEvent<unknown, RJSFSchema>) => {
@@ -83,10 +85,12 @@ const FormDialog: FC<FormDialogProps> = ({
         <Dialog visible={visible} title={title ?? schema.title ?? "Add Title to you schema"} onClose={onClose}>
             {isBinaryQuestion && ask ? (
                 <BinaryQuestionForm onClose={onClose} schema={schema} />
+            ) : isMultipleChoice && ask ? (
+                <MultipleChoiceForm onClose={onClose} schema={schema} />
             ) : (
                 <>
                     <Form
-                        schema={editableSchema}
+                        schema={schema}
                         uiSchema={uiSchema}
                         validator={validator}
                         onChange={handleDataChange}
@@ -117,10 +121,17 @@ function generateUiSchema(schema: RJSFSchema, ask?: boolean): UiSchema {
                     "ui:readonly": true, // Make it read-only
                 };
             }
-            if (val?.description) {
+            if (val?.type === "string" && val?.enum) {
+                if (val.enum.length === 2) {
+                    uiSchema[key] = {
+                        ...uiSchema[key],
+                        "ui:widget": "RadioWidget",
+                    };
+                }
+            } else if (val?.type === "array" && val?.items?.enum) {
                 uiSchema[key] = {
                     ...uiSchema[key],
-                    "ui:description": val.description,
+                    "ui:widget": "CheckboxesWidget",
                 };
             }
         }

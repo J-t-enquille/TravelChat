@@ -10,7 +10,7 @@ function App() {
     const [messages, setMessages] = useState<Array<Message>>([]);
     const [user, setUser] = useState<UserType>({
         name: "",
-        color: "#4874c5",
+        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
     });
     const [waitingForResponse, setWaitingForResponse] = useState<Array<Message>>([]);
 

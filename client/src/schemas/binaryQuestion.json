@@ -8,12 +8,12 @@
     "properties": {
         "binary": {
             "type": "string",
-            "title": "%BINARY_QUESTION%",
+            "title": "BINARY_QUESTION",
             "enum": [
-                "%OPTION1%",
-                "%OPTION2%"
+                "1",
+                "2"
             ],
-            "default": "%OPTION1%"
+            "default": ""
         }
 
     }

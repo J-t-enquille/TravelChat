@@ -8,7 +8,8 @@ export type Message = {
     senderColor: string;
     timestamp: string;
     text: string;
-    schema?: string;  // Maintenant explicitement optionnel
+    schema?: string; // Maintenant explicitement optionnel
+    answer?: boolean;
 };
 
 const messageSchema: JSONSchemaType<Message> = {
@@ -45,7 +46,12 @@ const messageSchema: JSONSchemaType<Message> = {
         schema: {
             type: "string",
             description: "Schema for custom questions",
-            nullable: true
+            nullable: true,
+        },
+        answer: {
+            type: "boolean",
+            description: "Indicates if the message is an answer to a question",
+            nullable: true,
         },
     },
     required: ["messageId", "senderId", "senderName", "senderColor", "text", "timestamp"],
@@ -64,26 +70,8 @@ export class Validation {
         // Compile all schemas here
         this.message = ajv.compile<Message>(messageSchema);
     }
-
-    // Fonction de test pour la validation des messages avec schéma binaire
-    public testBinaryQuestion(binaryQuestion: any): boolean {
-        const testMessage: Message = {
-            messageId: "test-id",
-            senderId: "test-sender",
-            senderName: "Test User",
-            senderColor: "#000000",
-            timestamp: new Date().toISOString(),
-            text: JSON.stringify(binaryQuestion),
-            schema: "binaryQuestion"  // Identifie le type de schéma
-        };
-
-        return this.message(testMessage);
-    }
 }
 
 const validate = new Validation();
 
 export const validateMessage = validate.message;
-
-// Export la fonction de test
-export const testBinaryQuestion = (binaryQuestion: any) => validate.testBinaryQuestion(binaryQuestion);
