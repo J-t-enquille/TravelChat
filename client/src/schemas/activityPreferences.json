@@ -11,7 +11,7 @@
         },
         "duration": {
             "type": "integer",
-            "title": "Duration (timestamp)"
+            "title": "Duration (hours)"
         },
         "price": {
             "type": "string",

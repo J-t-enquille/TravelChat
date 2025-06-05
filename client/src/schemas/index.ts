@@ -2,13 +2,15 @@ import { FaBeer, FaQuestion, FaCheckSquare } from "react-icons/fa";
 import multipleChoice from "./multipleChoice.json";
 import binaryQuestion from "./binaryQuestion.json";
 import travelPreferences from "./travelPreferences.json";
+import activityPreferences from "./activityPreferences.json";
 import type { IconType } from "react-icons";
 import type { Message } from "../services/Validation.ts";
 import validator from "@rjsf/validator-ajv8";
 import type { RJSFSchema } from "@rjsf/utils";
 import { FaEarthAmericas } from "react-icons/fa6";
+import { MdOutlineLocalActivity } from "react-icons/md";
 
-export const schemas = [multipleChoice, binaryQuestion, travelPreferences];
+export const schemas = [multipleChoice, binaryQuestion, travelPreferences, activityPreferences];
 
 /**
  * Selects an icon based on the schema name.
@@ -23,6 +25,9 @@ export const selectIcon = (name?: string): IconType => {
     }
     if (name?.replaceAll(" ", "") === "TravelPreferences") {
         return FaEarthAmericas;
+    }
+    if (name?.replaceAll(" ", "") === "ActivityPreferences") {
+        return MdOutlineLocalActivity;
     }
     return FaBeer;
 };
