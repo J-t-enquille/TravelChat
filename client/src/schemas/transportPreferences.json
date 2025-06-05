@@ -2,7 +2,7 @@
   "$id": "https://polytech.fr/schema/schemas/transportPreferences.json",
   "title": "Transport Preferences",
   "type": "object",
-  "required": ["transportation", "seat_preference", "meal_preference", "luggage_assistance"],
+  "required": ["transportation", "seat_preference", "meal_preference"],
   "properties": {
     "transportation": {
       "type": "string",

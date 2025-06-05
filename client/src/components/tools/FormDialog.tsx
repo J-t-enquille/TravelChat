@@ -8,6 +8,7 @@ import validator from "@rjsf/validator-ajv8";
 import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
 import { TravelPreferencesForm } from "../chat/TravelPreferencesForm.tsx";
 import { ActivityPreferencesForm } from "../chat/ActivityPreferencesForm.tsx";
+import { TransportPreferencesForm } from "../chat/TransportPreferencesForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -37,6 +38,7 @@ const FormDialog: FC<FormDialogProps> = ({
     const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
     const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
     const isActivityPreferences = schema.$id?.includes("activityPreferences.json");
+    const isTransportPreferences = schema.$id?.includes("transportPreferences.json");
 
     // Reset the validator when the component is unmounted
     useEffect(() => {
@@ -95,6 +97,8 @@ const FormDialog: FC<FormDialogProps> = ({
                 <TravelPreferencesForm onClose={onClose} schema={schema} />
             ) : isActivityPreferences && ask ? (
                 <ActivityPreferencesForm onClose={onClose} schema={schema} />
+            ) : isTransportPreferences && ask ? (
+                <TransportPreferencesForm onClose={onClose} schema={schema} />
             ) : (
                 <>
                     <Form

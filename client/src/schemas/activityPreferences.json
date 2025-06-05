@@ -2,7 +2,7 @@
     "$id": "https://polytech.fr/schema/schemas/activityPreferences.json",
     "title": "Activity Preferences",
     "type": "object",
-    "required": ["activity_type", "duration", "price", "adult_only"],
+    "required": ["activity_type", "duration", "price"],
     "properties": {
         "activity_type": {
             "type": "string",

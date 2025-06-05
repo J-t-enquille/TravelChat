@@ -22,6 +22,8 @@ const Chat: FC = () => {
                 const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
                 const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
                 const isActivityPreferences = schema.$id?.includes("activityPreferences.json");
+                const isTransportPreferences = schema.$id?.includes("transportPreferences.json");
+
                 if (!message.answer) {
                     setWaitingForResponse((prev) => [...prev, message]);
                     setMessages((prev) => [...prev, { ...message, text: `Awaiting answer... For ${schema.title}` }]);
@@ -57,6 +59,12 @@ const Chat: FC = () => {
                     } else if (isActivityPreferences) {
                         const data = JSON.parse(message.text);
                         const text = `Answer to ${schema.title} is: Activity Type: ${data.activity_type}, Adult Only: ${data.adult_only ? "Yes" : "No"}, Duration: ${data.duration} days, Price: ${data.price}`;
+                        const msg = { ...message, text };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isTransportPreferences) {
+                        const data = JSON.parse(message.text);
+                        // optionnal : special_request
+                        const text = `Answer to ${schema.title} is: Luggage assistance: ${data.luggage_assistance ? "Yes" : "No"}, Meal preference: ${data.meal_preference}, Seat preference: ${data.seat_preference}, Transportation: ${data.transportation} ${data.special_request ? `, Special request: ${data.special_request}` : ""}`;
                         const msg = { ...message, text };
                         setMessages((prev) => [...prev, msg]);
                     }
