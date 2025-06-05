@@ -6,9 +6,7 @@ import type { IChangeEvent } from "@rjsf/core";
 import { BinaryQuestionForm } from "../chat/BinaryQuestionForm.tsx";
 import validator from "@rjsf/validator-ajv8";
 import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
-import { TravelPreferencesForm } from "../chat/TravelPreferencesForm.tsx";
-import { ActivityPreferencesForm } from "../chat/ActivityPreferencesForm.tsx";
-import { TransportPreferencesForm } from "../chat/TransportPreferencesForm.tsx";
+import { ExtensionForm } from "../chat/ExtensionForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -94,11 +92,23 @@ const FormDialog: FC<FormDialogProps> = ({
             ) : isMultipleChoice && ask ? (
                 <MultipleChoiceForm onClose={onClose} schema={schema} />
             ) : isTravelPreferences && ask ? (
-                <TravelPreferencesForm onClose={onClose} schema={schema} />
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your travel preferences."}
+                />
             ) : isActivityPreferences && ask ? (
-                <ActivityPreferencesForm onClose={onClose} schema={schema} />
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your activity preferences."}
+                />
             ) : isTransportPreferences && ask ? (
-                <TransportPreferencesForm onClose={onClose} schema={schema} />
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your transport preferences."}
+                />
             ) : (
                 <>
                     <Form

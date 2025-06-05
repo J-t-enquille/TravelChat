@@ -3,14 +3,15 @@ import { Context } from "../../services/Context.ts";
 import { sendMessage } from "../../services/Socket.ts";
 import type { RJSFSchema } from "@rjsf/utils";
 
-interface TransportPreferencesFormProps {
+interface ExtensionFormProps {
     onClose: () => void;
     schema: RJSFSchema;
+    initialQuestionText: string;
 }
 
-export const TransportPreferencesForm: FC<TransportPreferencesFormProps> = ({ onClose, schema }) => {
+export const ExtensionForm: FC<ExtensionFormProps> = ({ onClose, schema, initialQuestionText }) => {
     const { user, setMessages } = useContext(Context);
-    const [questionText, setQuestionText] = useState("Please enter your transport preferences.");
+    const [questionText, setQuestionText] = useState(initialQuestionText);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
