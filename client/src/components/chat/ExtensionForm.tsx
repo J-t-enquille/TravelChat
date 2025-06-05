@@ -17,7 +17,7 @@ export const ExtensionForm: FC<ExtensionFormProps> = ({ onClose, schema, initial
         e.preventDefault();
 
         const stringSchema = JSON.stringify(schema);
-        const msg = sendMessage("useless", user, stringSchema);
+        const msg = sendMessage(questionText, user, stringSchema);
 
         if (msg) {
             const messageWithSchema = {
