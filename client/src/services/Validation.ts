@@ -8,6 +8,8 @@ export type Message = {
     senderColor: string;
     timestamp: string;
     text: string;
+    schema?: string; // Maintenant explicitement optionnel
+    answer?: boolean;
 };
 
 const messageSchema: JSONSchemaType<Message> = {
@@ -40,6 +42,16 @@ const messageSchema: JSONSchemaType<Message> = {
         text: {
             type: "string",
             description: "Free-text content of the message",
+        },
+        schema: {
+            type: "string",
+            description: "Schema for custom questions",
+            nullable: true,
+        },
+        answer: {
+            type: "boolean",
+            description: "Indicates if the message is an answer to a question",
+            nullable: true,
         },
     },
     required: ["messageId", "senderId", "senderName", "senderColor", "text", "timestamp"],

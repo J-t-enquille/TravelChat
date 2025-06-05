@@ -153,7 +153,6 @@ html, body, body>#root {
     padding: 10px;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgb(192, 192, 192);
 }
 
@@ -172,10 +171,28 @@ html, body, body>#root {
     font-weight: bold;
 }
 
-.rjsf-field{
+.rjsf-field>select{
+    width: 100%;
+}
+
+.rjsf-field>.field-radio-group>.radio>label {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+}
+
+.rjsf-field>.field-radio-group>.radio>label>span{
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.rjsf-field>.checkboxes>.checkbox>label {
+    display: flex;
+}
+
+.rjsf-field>.checkboxes>.checkbox>label>span{
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
 }
 
 .field-description {

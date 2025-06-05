@@ -1,9 +1,11 @@
-import { type FC, useCallback } from "react";
+import { type FC, useCallback, useEffect } from "react";
 import type { RJSFSchema, RJSFValidationError, UiSchema } from "@rjsf/utils";
 import Form from "@rjsf/core";
-import validator from "@rjsf/validator-ajv8";
 import Dialog from "./Dialog.tsx";
 import type { IChangeEvent } from "@rjsf/core";
+import { BinaryQuestionForm } from "../chat/BinaryQuestionForm.tsx";
+import validator from "@rjsf/validator-ajv8";
+import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -15,6 +17,7 @@ type FormDialogProps = {
     onError?: (errors: RJSFValidationError[]) => void;
     log?: boolean;
     ask?: boolean; // If it's a question or not
+    schemaToSend?: RJSFSchema;
 };
 
 const FormDialog: FC<FormDialogProps> = ({
@@ -28,6 +31,14 @@ const FormDialog: FC<FormDialogProps> = ({
     title,
     ask,
 }) => {
+    const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
+    const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
+
+    // Reset the validator when the component is unmounted
+    useEffect(() => {
+        return validator.reset();
+    }, []);
+
     const handleDataChange = useCallback(
         (data: IChangeEvent<unknown, RJSFSchema>) => {
             if (log) {
@@ -72,14 +83,22 @@ const FormDialog: FC<FormDialogProps> = ({
 
     return (
         <Dialog visible={visible} title={title ?? schema.title ?? "Add Title to you schema"} onClose={onClose}>
-            <Form
-                schema={schema}
-                uiSchema={uiSchema}
-                validator={validator}
-                onChange={handleDataChange}
-                onSubmit={handleSubmit}
-                onError={handleError}
-            />
+            {isBinaryQuestion && ask ? (
+                <BinaryQuestionForm onClose={onClose} schema={schema} />
+            ) : isMultipleChoice && ask ? (
+                <MultipleChoiceForm onClose={onClose} schema={schema} />
+            ) : (
+                <>
+                    <Form
+                        schema={schema}
+                        uiSchema={uiSchema}
+                        validator={validator}
+                        onChange={handleDataChange}
+                        onSubmit={handleSubmit}
+                        onError={handleError}
+                    />
+                </>
+            )}
         </Dialog>
     );
 };
@@ -102,10 +121,17 @@ function generateUiSchema(schema: RJSFSchema, ask?: boolean): UiSchema {
                     "ui:readonly": true, // Make it read-only
                 };
             }
-            if (val?.description) {
+            if (val?.type === "string" && val?.enum) {
+                if (val.enum.length === 2) {
+                    uiSchema[key] = {
+                        ...uiSchema[key],
+                        "ui:widget": "RadioWidget",
+                    };
+                }
+            } else if (val?.type === "array" && val?.items?.enum) {
                 uiSchema[key] = {
                     ...uiSchema[key],
-                    "ui:description": val.description,
+                    "ui:widget": "CheckboxesWidget",
                 };
             }
         }

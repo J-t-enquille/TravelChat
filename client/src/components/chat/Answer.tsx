@@ -1,6 +1,6 @@
 import { type FC, useCallback, useContext, useState } from "react";
 import { Context } from "../../services/Context.ts";
-import { identifyMessageSchema, selectIcon } from "../../schemas";
+import { selectIcon } from "../../schemas";
 import type { RJSFSchema } from "@rjsf/utils";
 import FormDialog from "../tools/FormDialog.tsx";
 import { sendMessage } from "../../services/Socket.ts";
@@ -39,7 +39,7 @@ const AnswerButton: FC = () => {
                         }}
                     >
                         {waitingForResponse.map((message, index) => {
-                            const schema = identifyMessageSchema(message);
+                            const schema = JSON.parse(message.schema!) as RJSFSchema;
                             return (
                                 <button
                                     key={index}
@@ -64,13 +64,21 @@ const AnswerButton: FC = () => {
                     onClose={hideDialog}
                     visible={dialogVisible}
                     onSubmit={(ev) => {
-                        const text = `Here is my answer to your question:\n` + JSON.stringify(ev.formData);
-                        const msg = sendMessage(text, user);
+                        const isBinaryQuestion = answerSchema.$id?.includes("binaryQuestion.json");
+                        const isMultipleChoice = answerSchema.$id?.includes("multipleChoice.json");
+                        const answeredSchema = isBinaryQuestion
+                            ? "Binary question"
+                            : isMultipleChoice
+                              ? "Multiple choice"
+                              : "Question";
+
+                        const text = JSON.stringify(ev.formData);
+                        const msg = sendMessage(text, user, JSON.stringify(answerSchema), true);
                         const message = waitingForResponse[answerTo!];
                         if (msg) {
                             const localMsg = {
                                 ...msg,
-                                text: `Answer to ${message?.senderName}:  ${JSON.stringify(ev.formData)}`,
+                                text: `Answered to ${message?.senderName} ${answeredSchema}`,
                             };
                             setMessages((prev) => [...prev, localMsg]);
                             if (answerTo !== undefined)

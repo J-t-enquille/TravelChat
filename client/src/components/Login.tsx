@@ -28,6 +28,11 @@ function Login({ user, setUser }: LoginProps) {
                         value={user.name}
                         className="text-input"
                         onChange={(e) => setUser({ ...user, name: e.target.value })}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleConnect();
+                            }
+                        }}
                     />
                     {error && <div className={"error"}>{error}</div>}
                 </div>
