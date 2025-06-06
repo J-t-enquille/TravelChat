@@ -123,7 +123,7 @@ Add an `isCustomSchema` variable to check whether the schema is customised
 ```javascript
 const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
 ```
-Puis dans le `return()`:
+Then in the `return()`:
 ```javascript
 isCustomSchema && ask ? (
     <ExtensionForm
