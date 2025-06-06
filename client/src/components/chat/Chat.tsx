@@ -27,10 +27,7 @@ const Chat: FC = () => {
                 if (!message.answer) {
                     setWaitingForResponse((prev) => [...prev, message]);
                     const combinedText = `${message.text}\nAwaiting answer... For ${schema.title}`;
-                    setMessages((prev) => [
-                        ...prev,
-                        { ...message, text: combinedText, timestamp: Date.now().toString() },
-                    ]);
+                    setMessages((prev) => [...prev, { ...message, text: combinedText, timestamp: new Date() }]);
                 } else {
                     if (isBinaryQuestion) {
                         const msg = {
