@@ -119,7 +119,7 @@ export const selectIcon = (name?: string): IconType => {
 ```
 3. Ajouter le traitement dans FormDialog
 
-Ajoutez une variable `isCustomSchema` pour vérifier si le schéma est personnalisé
+Add an `isCustomSchema` variable to check whether the schema is customised
 ```javascript
 const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
 ```
@@ -133,9 +133,9 @@ isCustomSchema && ask ? (
     />
 ) :
 ```
-Il est possible de changer `<ExtensionForm />` par un autre composant si vous souhaitez un comportement différent pour votre schéma personnalisé.
+It is possible to change `<ExtensionForm />` by another component if you want a different behaviour for your custom schema.
 
-4. Ajouter dans `Answer.tsx` la gestion de la réponse
+4. Add response management to `Answer.tsx`
 ```javascript
 const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
 const answeredSchema =
@@ -145,7 +145,7 @@ const answeredSchema =
         : "Question";
 ```
 
-5. Dans `Chat.tsx` ajoutez le traitement de la réponse
+5. In `Chat.tsx` add the response treatment
 ```javascript
 const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
     ...
