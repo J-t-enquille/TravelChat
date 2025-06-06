@@ -140,7 +140,7 @@ It is possible to change `<ExtensionForm />` by another component if you want a 
 const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
 const answeredSchema =
     ...
-    : isMyCustomSchema
+    : isCustomSchema
         ? "My Custom Extension"
         : "Question";
 ```
