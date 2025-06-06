@@ -117,7 +117,7 @@ export const selectIcon = (name?: string): IconType => {
     return FaBeer;
 };
 ```
-3. Ajouter le traitement dans FormDialog
+3. Ajouter le traitement dans `FormDialog.tsx`
 
 Add an `isCustomSchema` variable to check whether the schema is customised
 ```javascript
