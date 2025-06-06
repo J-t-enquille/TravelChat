@@ -7,6 +7,11 @@
 
 Communication is simulated locally.
 
+## How it works
+- Sending a simple message: the user can enter a free text message and send it.
+- Sending a structured message: the user can select a plugin (and therefore a schema) and enter the question. The message sent contains the text of the question and the associated JSON schema. The recipient receives the message and can respond (Answer tab) using a form generated from the schema.
+- Receive a structured response: the response is formatted according to the JSON schema associated with the message.
+
 ## Technologies used
 - **Frontend** : React
 - **Backend** : Express, Socket.IO
@@ -54,3 +59,82 @@ cd client
 npm run dev
 ```
 By default, the two clients will be on port 5173 and 5174.
+
+## Add your own schema as a plugin
+1. Create a new JSON schema
+
+In the `/schemas` folder, add a new .json file containing your schema.
+Example :
+```json
+{
+  "$id": "myCustomSchema.json",
+  "title": "My Custom Schema",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "title": "Your Question"
+    },
+    "details": {
+      "type": "string",
+      "title": "Additional Details"
+    }
+  },
+  "required": ["question"]
+}
+```
+2. Declare the schema in `schemas/index.ts`
+```javascript
+import myCustomSchema from './myCustomSchema.json';
+export const schemas = [..., myCustomSchema];
+```
+And in the `selectIcon()` function, you can add a custom icon to the plugin (otherwise the default beer icon)
+```javascript
+import { BiCustomize } from "react-icons/bi";
+export const selectIcon = (name?: string): IconType => {
+    ...
+    if (name?.replaceAll(" ", "") === "MyCustomSchema") {
+        return BiCustomize;
+    }
+    return FaBeer;
+};
+```
+3. Ajouter le traitement dans FormDialog
+
+Ajoutez une variable `isCustomSchema` pour vérifier si le schéma est personnalisé
+```javascript
+const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
+```
+Puis dans le `return()`:
+```javascript
+isCustomSchema && ask ? (
+    <ExtensionForm
+        onClose={onClose}
+        schema={schema}
+        initialQuestionText={"Please enter your ..."}
+    />
+) :
+```
+Il est possible de changer `<ExtensionForm />` par un autre composant si vous souhaitez un comportement différent pour votre schéma personnalisé.
+
+4. Ajouter dans `Answer.tsx` la gestion de la réponse
+```javascript
+const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
+const answeredSchema =
+    ...
+    : isMyCustomSchema
+        ? "My Custom Extension"
+        : "Question";
+```
+
+5. Dans `Chat.tsx` ajoutez le traitement de la réponse
+```javascript
+const isCustomSchema = schema.$id?.includes("myCustomSchema.json");
+    ...
+    else if (isCustomSchema) {
+        const data = JSON.parse(message.text);
+        const text = `Answer to ${schema.title}: Question: ${data.question}, Details: ${data.details}`;
+        const msg = { ...message, text };
+        setMessages((prev) => [...prev, msg]);
+    }
+```
