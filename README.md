@@ -10,9 +10,9 @@
 Communication is simulated locally.
 
 ## How it works
-- Sending a simple message: the user can enter a free text message and send it.
-- Sending a structured message: the user can select a plugin (and therefore a schema) and enter the question. The message sent contains the text of the question and the associated JSON schema. The recipient receives the message and can respond (Answer tab) using a form generated from the schema.
-- Receive a structured response: the response is formatted according to the JSON schema associated with the message.
+- **Sending a simple message:** the user can enter a free text message and send it.
+- **Sending a structured message:** the user can select a plugin (and therefore a schema) and enter the question. The message sent contains the text of the question and the associated JSON schema. The recipient receives the message and can respond (Answer tab) using a form generated from the schema.
+- **Receive a structured response:** the response is formatted according to the JSON schema associated with the message.
 
 ## Technologies used
 
