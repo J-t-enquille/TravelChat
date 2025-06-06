@@ -25,7 +25,7 @@ export const BinaryQuestionForm: FC<BinaryQuestionFormProps> = ({ onClose, schem
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const msg = sendMessage("useless", user, stringSchema);
+        const msg = sendMessage(question, user, stringSchema);
         if (msg) {
             const messageWithSchema = {
                 ...msg,

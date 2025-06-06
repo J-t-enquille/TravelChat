@@ -1,0 +1,25 @@
+{
+    "$id": "https://polytech.fr/schema/schemas/activityPreferences.json",
+    "title": "Activity Preferences",
+    "type": "object",
+    "required": ["activity_type", "duration", "price"],
+    "properties": {
+        "activity_type": {
+            "type": "string",
+            "enum": ["Beach", "Mountain", "Cultural", "Adventure", "Relaxation", "Urban", "Other"],
+            "title": "Type of activities"
+        },
+        "duration": {
+            "type": "integer",
+            "title": "Duration (hours)"
+        },
+        "price": {
+            "type": "string",
+            "title": "Price"
+        },
+        "adult_only": {
+            "type": "boolean",
+            "title": "Adults only?"
+        }
+    }
+}

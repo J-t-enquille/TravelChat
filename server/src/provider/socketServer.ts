@@ -15,6 +15,16 @@ export const setupSocketServer = () => {
 
         // Listen for incoming messages from clients
         socket.on("message", (message) => {
+            const clientsCount = io.sockets.sockets.size;
+            if (clientsCount < 2) {
+                socket.emit("message", {
+                    senderId: "server",
+                    senderName: "Server",
+                    text: "At least two people must be connected to send a message.",
+                    timestamp: Date.now(),
+                });
+                return;
+            }
             // Broadcast the message to all connected clients except the sender
             io.except(socket.id).emit("message", message);
         });

@@ -20,10 +20,14 @@ const Chat: FC = () => {
                 const schema = JSON.parse(message.schema) as RJSFSchema;
                 const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
                 const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
+                const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
+                const isActivityPreferences = schema.$id?.includes("activityPreferences.json");
+                const isTransportPreferences = schema.$id?.includes("transportPreferences.json");
 
                 if (!message.answer) {
                     setWaitingForResponse((prev) => [...prev, message]);
-                    setMessages((prev) => [...prev, { ...message, text: `Awaiting answer... For ${schema.title}` }]);
+                    const combinedText = `${message.text}\nAwaiting answer... For ${schema.title}`;
+                    setMessages((prev) => [...prev, { ...message, text: combinedText, timestamp: Date.now() }]);
                 } else {
                     if (isBinaryQuestion) {
                         const msg = {
@@ -38,6 +42,31 @@ const Chat: FC = () => {
                             ...message,
                             text,
                         };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isTravelPreferences) {
+                        const data = JSON.parse(message.text);
+                        let travelPeriodText = "";
+
+                        if (data.travel_period?.month && data.travel_period?.number_of_days) {
+                            travelPeriodText = `${data.travel_period.number_of_days} days in ${data.travel_period.month}`;
+                        } else if (data.travel_period?.start_date && data.travel_period?.end_date) {
+                            travelPeriodText = `${data.travel_period.start_date} to ${data.travel_period.end_date}`;
+                        }
+
+                        const text = `Answer to ${schema.title} is: Destination: ${data.destination}, Travel Period: ${travelPeriodText}, Budget: ${data.budget}, Housing Type: ${data.housing_type}, Number of Rooms: ${data.number_of_rooms}, Number of Travelers: ${data.number_of_travelers}, Meal Plan: ${data.meal_plan}`;
+
+                        const msg = { ...message, text };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isActivityPreferences) {
+                        const data = JSON.parse(message.text);
+                        const text = `Answer to ${schema.title} is: Activity Type: ${data.activity_type}, Adult Only: ${data.adult_only ? "Yes" : "No"}, Duration: ${data.duration} days, Price: ${data.price}`;
+                        const msg = { ...message, text };
+                        setMessages((prev) => [...prev, msg]);
+                    } else if (isTransportPreferences) {
+                        const data = JSON.parse(message.text);
+                        // optionnal : special_request
+                        const text = `Answer to ${schema.title} is: Luggage assistance: ${data.luggage_assistance ? "Yes" : "No"}, Meal preference: ${data.meal_preference}, Seat preference: ${data.seat_preference}, Transportation: ${data.transportation} ${data.special_request ? `, Special request: ${data.special_request}` : ""}`;
+                        const msg = { ...message, text };
                         setMessages((prev) => [...prev, msg]);
                     }
                 }
@@ -64,6 +93,9 @@ const Chat: FC = () => {
     };
 
     function getContrastingColor(hex: string): string {
+        if (!hex) {
+            return "#000000";
+        }
         hex = hex.replace("#", "");
 
         const r = parseInt(hex.slice(0, 2), 16);
@@ -93,7 +125,9 @@ const Chat: FC = () => {
                                     className="message-box"
                                     style={{
                                         backgroundColor: isOwnMessage ? user.color : msg.senderColor,
-                                        color: getContrastingColor(isOwnMessage ? user.color : msg.senderColor),
+                                        color: getContrastingColor(
+                                            isOwnMessage ? user.color : msg.senderColor || "#cccccc",
+                                        ),
                                     }}
                                 >
                                     {msg.text}

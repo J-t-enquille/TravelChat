@@ -25,7 +25,7 @@ export const MultipleChoiceForm: FC<MultipleChoiceProps> = ({ onClose, schema })
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
 
-        const msg = sendMessage("useless", user, stringSchema);
+        const msg = sendMessage(question, user, stringSchema);
         if (msg) {
             const messageWithSchema = {
                 ...msg,

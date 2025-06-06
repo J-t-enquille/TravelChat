@@ -66,11 +66,17 @@ const AnswerButton: FC = () => {
                     onSubmit={(ev) => {
                         const isBinaryQuestion = answerSchema.$id?.includes("binaryQuestion.json");
                         const isMultipleChoice = answerSchema.$id?.includes("multipleChoice.json");
+                        const isTravelPreferences = answerSchema.$id?.includes("travelPreferences.json");
+                        const isActivityPreferences = answerSchema.$id?.includes("activityPreferences.json");
                         const answeredSchema = isBinaryQuestion
                             ? "Binary question"
                             : isMultipleChoice
                               ? "Multiple choice"
-                              : "Question";
+                              : isTravelPreferences
+                                ? "Travel preferences"
+                                : isActivityPreferences
+                                  ? "Activity preferences"
+                                  : "Question";
 
                         const text = JSON.stringify(ev.formData);
                         const msg = sendMessage(text, user, JSON.stringify(answerSchema), true);

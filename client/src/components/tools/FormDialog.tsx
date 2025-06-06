@@ -6,6 +6,7 @@ import type { IChangeEvent } from "@rjsf/core";
 import { BinaryQuestionForm } from "../chat/BinaryQuestionForm.tsx";
 import validator from "@rjsf/validator-ajv8";
 import { MultipleChoiceForm } from "../chat/MultipleChoiceForm.tsx";
+import { ExtensionForm } from "../chat/ExtensionForm.tsx";
 
 type FormDialogProps = {
     title?: string;
@@ -33,6 +34,9 @@ const FormDialog: FC<FormDialogProps> = ({
 }) => {
     const isBinaryQuestion = schema.$id?.includes("binaryQuestion.json");
     const isMultipleChoice = schema.$id?.includes("multipleChoice.json");
+    const isTravelPreferences = schema.$id?.includes("travelPreferences.json");
+    const isActivityPreferences = schema.$id?.includes("activityPreferences.json");
+    const isTransportPreferences = schema.$id?.includes("transportPreferences.json");
 
     // Reset the validator when the component is unmounted
     useEffect(() => {
@@ -87,6 +91,24 @@ const FormDialog: FC<FormDialogProps> = ({
                 <BinaryQuestionForm onClose={onClose} schema={schema} />
             ) : isMultipleChoice && ask ? (
                 <MultipleChoiceForm onClose={onClose} schema={schema} />
+            ) : isTravelPreferences && ask ? (
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your travel preferences."}
+                />
+            ) : isActivityPreferences && ask ? (
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your activity preferences."}
+                />
+            ) : isTransportPreferences && ask ? (
+                <ExtensionForm
+                    onClose={onClose}
+                    schema={schema}
+                    initialQuestionText={"Please enter your transport preferences."}
+                />
             ) : (
                 <>
                     <Form
